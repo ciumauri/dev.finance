@@ -12,6 +12,20 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,400;0,700;1,100;1,200;1,400;1,700&display=swap"
       rel="stylesheet"
     />
+    <script defer>
+      const Modal = {
+        open() {
+          //abrir modal
+          document.querySelector('.modal-overlay').classList.add('active')
+          //adicionar a class active ao modal
+        },
+        close() {
+          //fechar Modal
+          document.querySelector('.modal-overlay').classList.remove('active')
+          //remover a class active do modal
+        }
+      }
+    </script>
   </head>
   <body>
     <header>
@@ -50,7 +64,9 @@
       <section id="transaction">
         <h2 class="sr-only">Transações</h2>
 
-        <a class="button new" href="#">+ Nova Transação</a>
+        <a class="button new" href="#" onclick="Modal.open()"
+          >+ Nova Transação</a
+        >
 
         <table id="data-table">
           <thead>
@@ -85,7 +101,7 @@
       </section>
     </main>
 
-    <div class="modal-overlay active">
+    <div class="modal-overlay">
       <div class="modal">
         <div id="form">
           <h2>Nova Transação</h2>
@@ -119,8 +135,11 @@
               <label class="sr-only" for="date">Data</label>
               <input type="date" id="date" name="date" />
             </div>
+
             <div class="input-group actions">
-              <a href="#" class="button cancel">Cancelar</a>
+              <a onclick="Modal.close()" href="#" class="button cancel"
+                >Cancelar</a
+              >
               <button>Salvar</button>
             </div>
           </form>
