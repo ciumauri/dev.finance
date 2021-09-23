@@ -31,7 +31,13 @@ const transactions = [
   {
     id: 3,
     description: 'Internet',
-    amount: -20000,
+    amount: -20013,
+    date: '23/01/2021'
+  },
+  {
+    id: 4,
+    description: 'App',
+    amount: 200000,
     date: '23/01/2021'
   }
 ]
@@ -43,28 +49,94 @@ const transactions = [
 
 const Transaction = {
   incomes() {
-    // somar as entradas aqui
-  }
-}
-
-const Transaction = {
+    let income = 0
+    // pegar todas as Transações
+    transactions.forEach(transaction => {
+      // se maior que zero
+      if (transaction.amount > 0) {
+        // somar a uma variável e retorná-la
+        income += transaction.amount
+      }
+    })
+    return income
+  },
   expenses() {
-    // somar as saidas aqui
+    let expense = 0
+    // pegar todas as Transações
+    transactions.forEach(transaction => {
+      // se menor que zero
+      if (transaction.amount < 0) {
+        // somar a uma variável e retorná-la
+        expense += transaction.amount
+      }
+    })
+    return expense
+  },
+  total() {
+    // somar as entradas e saidas
+    return Transaction.incomes() + Transaction.expenses()
+    // e obter o total
   }
 }
 
 // Substituir os dados do HTML com os dados do JS
 const DOM = {
-  innerHTMLTransaction() {
-    const html = `
-      <tr>
-        <td class="description">Luz</td>
-        <td class="expense">- R$ 500,00</td>
-        <td class="date">23/09/2021</td>
+  transactionsContainer: document.querySelector('#data-table tbody'),
+
+  addTransaction(transaction, index) {
+    const tr = document.createElement('tr')
+    tr.innerHTML = DOM.innerHTMLTransaction(transaction)
+
+    DOM.transactionsContainer.appendChild(tr)
+  },
+  innerHTMLTransaction(transaction) {
+    const CSSclass = transaction.amount > 0 ? 'income' : 'expense'
+
+    const amount = Utils.formatCurrency(transaction.amount)
+
+    const html = `      
+        <td class="description">${transaction.description}</td>
+        <td class="${CSSclass}">${amount}</td>
+        <td class="date">${transaction.date}</td>
         <td>
           <img src="./assets/minus.svg" alt="Remover transação" />
-        </td>
-      </tr>
+        </td>      
     `
+    return html
+  },
+
+  updateBalance() {
+    document.getElementById('incomeDisplay').innerHTML = Utils.formatCurrency(
+      Transaction.incomes()
+    )
+    document.getElementById('expenseDisplay').innerHTML = Utils.formatCurrency(
+      Transaction.expenses()
+    )
+    document.getElementById('totalDisplay').innerHTML = Utils.formatCurrency(
+      Transaction.total()
+    )
   }
 }
+
+const Utils = {
+  formatCurrency(value) {
+    const signal = Number(value) < 0 ? '-' : ''
+
+    value = String(value).replace(/\D/g, '')
+
+    value = Number(value) / 100
+
+    value = value.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    })
+
+    return signal + value
+  }
+}
+
+transactions.forEach(function (transaction) {
+  DOM.addTransaction(transaction)
+})
+
+DOM.updateBalance()
