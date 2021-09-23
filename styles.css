@@ -17,7 +17,7 @@ html {
 }
 
 body {
-  background: #e0e5e9;
+  background: #f0f0f0;
   font-family: 'Poppins', sans-serif;
 }
 
@@ -237,7 +237,7 @@ td.expense {
 }
 
 .modal {
-  background: #e0e5e9;
+  background: #f0f0f0;
   padding: 2.4rem;
 
   position: relative;
