@@ -48,10 +48,18 @@ const transactions = [
 // assim eu terei o valor total
 
 const Transaction = {
+  all: transactions,
+
+  add(transaction) {
+    Transaction.all.push(transaction)
+
+    App.reload()
+  },
+
   incomes() {
     let income = 0
     // pegar todas as Transações
-    transactions.forEach(transaction => {
+    Transaction.all.forEach(transaction => {
       // se maior que zero
       if (transaction.amount > 0) {
         // somar a uma variável e retorná-la
@@ -60,10 +68,11 @@ const Transaction = {
     })
     return income
   },
+
   expenses() {
     let expense = 0
     // pegar todas as Transações
-    transactions.forEach(transaction => {
+    Transaction.all.forEach(transaction => {
       // se menor que zero
       if (transaction.amount < 0) {
         // somar a uma variável e retorná-la
@@ -72,6 +81,7 @@ const Transaction = {
     })
     return expense
   },
+
   total() {
     // somar as entradas e saidas
     return Transaction.incomes() + Transaction.expenses()
@@ -89,6 +99,7 @@ const DOM = {
 
     DOM.transactionsContainer.appendChild(tr)
   },
+
   innerHTMLTransaction(transaction) {
     const CSSclass = transaction.amount > 0 ? 'income' : 'expense'
 
@@ -115,6 +126,10 @@ const DOM = {
     document.getElementById('totalDisplay').innerHTML = Utils.formatCurrency(
       Transaction.total()
     )
+  },
+
+  clearTransactions() {
+    DOM.transactionsContainer.innerHTML = ''
   }
 }
 
@@ -135,8 +150,26 @@ const Utils = {
   }
 }
 
-transactions.forEach(function (transaction) {
-  DOM.addTransaction(transaction)
-})
+const App = {
+  init() {
+    Transaction.all.forEach(transaction => {
+      DOM.addTransaction(transaction)
+    })
 
-DOM.updateBalance()
+    DOM.updateBalance()
+  },
+
+  reload() {
+    DOM.clearTransactions()
+    App.init()
+  }
+}
+
+App.init()
+
+Transaction.add({
+  id: 39,
+  description: 'Teste',
+  amount: 200,
+  date: '23/01/2021'
+})
