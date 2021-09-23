@@ -15,43 +15,43 @@ const Modal = {
 // Eu preciso criar o array de objetos transactions
 // depois definir as propriedades, id, description, amount, date
 
-const transactions = [
-  {
-    id: 1,
-    description: 'Luz',
-    amount: -50000,
-    date: '23/01/2021'
-  },
-  {
-    id: 2,
-    description: 'Criação Website',
-    amount: 500000,
-    date: '23/01/2021'
-  },
-  {
-    id: 3,
-    description: 'Internet',
-    amount: -20013,
-    date: '23/01/2021'
-  },
-  {
-    id: 4,
-    description: 'App',
-    amount: 200000,
-    date: '23/01/2021'
-  }
-]
-
 // Eu preciso somar as entradas
 // depois eu preciso somar as saidas e
 // remover das entradas o valor das saidas
 // assim eu terei o valor total
 
 const Transaction = {
-  all: transactions,
+  all: [
+    {
+      description: 'Luz',
+      amount: -50000,
+      date: '23/01/2021'
+    },
+    {
+      description: 'Criação Website',
+      amount: 500000,
+      date: '23/01/2021'
+    },
+    {
+      description: 'Internet',
+      amount: -20013,
+      date: '23/01/2021'
+    },
+    {
+      description: 'App',
+      amount: 200000,
+      date: '23/01/2021'
+    }
+  ],
 
   add(transaction) {
     Transaction.all.push(transaction)
+
+    App.reload()
+  },
+
+  remove(index) {
+    Transaction.all.splice(index, 1)
 
     App.reload()
   },
@@ -147,6 +147,57 @@ const Utils = {
     })
 
     return signal + value
+  },
+
+  formatAmount(value) {
+    value = Number(value) * 100
+    console.log(value)
+  }
+}
+
+const Form = {
+  description: document.querySelector('input#description'),
+  amount: document.querySelector('input#amount'),
+  date: document.querySelector('input#date'),
+
+  getValues() {
+    return {
+      description: Form.description.value,
+      amount: Form.amount.value,
+      date: Form.date.value
+    }
+  },
+
+  validatFields() {
+    const { description, amount, date } = Form.getValues()
+
+    if (description.trim() === '' || amount.trim === '' || date.trim === '') {
+      throw new Error('Por favor, preencha todos os campos')
+    }
+  },
+
+  formatValues() {
+    let { description, amount, date } = Form.getValues()
+
+    amount = Utils.formatAmount(amount)
+  },
+
+  submit(event) {
+    // impedir que seja enviado os dados pelo navegador por padrão
+    event.preventDefault()
+    // tratamento de erros
+    try {
+      // verificar se todas as informações foram preenchidas
+      //Form.validatFields()
+      // formatar os dados para Salvar
+      Form.formatValues()
+      // salvar
+      // apagar os dados do form
+      // fechar moral
+      // Atualizar Aplicação
+    } catch (error) {
+      alert(error.message)
+    }
   }
 }
 
@@ -166,10 +217,3 @@ const App = {
 }
 
 App.init()
-
-Transaction.add({
-  id: 39,
-  description: 'Teste',
-  amount: 200,
-  date: '23/01/2021'
-})
